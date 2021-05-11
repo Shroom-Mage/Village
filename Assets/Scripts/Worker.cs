@@ -11,7 +11,7 @@ public class Worker : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
     }
 
-    public void ReceiveWorkOrder(Station station, WorkOrder order) {
+    public void ReceiveWorkOrder(Station station, Recipe order) {
         Debug.Log(name + ": Work Order received.");
         _agent.SetDestination(station.transform.position);
     }

@@ -5,17 +5,20 @@ using UnityEngine;
 public class Station : MonoBehaviour
 {
     public Worker assignee;
-    public List<WorkOrder> orders;
+    public List<Recipe> orders;
+    public Recipe recipe;
 
     private void Start() {
         Debug.Log(name + ": Start.");
-        WorkOrder order = ScriptableObject.CreateInstance<WorkOrder>();
-        orders.Add(order);
-        InitiateWorkOrder(order);
+        orders.Add(recipe);
+        InitiateWorkOrder(recipe);
+    }
+
+    private void OnMouseDown() {
     }
 
     //Instruct worker to check station for materials
-    public void InitiateWorkOrder(WorkOrder order) {
+    public void InitiateWorkOrder(Recipe order) {
         Debug.Log(name + ": Work Order initiated.");
         assignee.ReceiveWorkOrder(this, order);
     }

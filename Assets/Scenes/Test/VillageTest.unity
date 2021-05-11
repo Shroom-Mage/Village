@@ -332,6 +332,14 @@ PrefabInstance:
       value: Station
       objectReference: {fileID: 0}
     - target: {fileID: 7031548850556806996, guid: bcb5e576133268548976b6ef39480907, type: 3}
+      propertyPath: order
+      value: 
+      objectReference: {fileID: 11400000, guid: e4945894096d6df48887b957fa4a407e, type: 2}
+    - target: {fileID: 7031548850556806996, guid: bcb5e576133268548976b6ef39480907, type: 3}
+      propertyPath: recipe
+      value: 
+      objectReference: {fileID: 11400000, guid: e4945894096d6df48887b957fa4a407e, type: 2}
+    - target: {fileID: 7031548850556806996, guid: bcb5e576133268548976b6ef39480907, type: 3}
       propertyPath: assignee
       value: 
       objectReference: {fileID: 1538280461}
