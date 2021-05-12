@@ -6,20 +6,24 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     [SerializeField]
-    private Resource _resourceA;
+    private Item _inputA;
     [SerializeField]
-    private int _resourceAQuantity;
+    private int _inputAQuantity;
     [SerializeField]
-    private Resource _resourceB;
+    private Item _inputB;
     [SerializeField]
-    private int _resourceBQuantity;
+    private int _inputBQuantity;
     [SerializeField]
-    private Resource _resourceC;
+    private Item _inputC;
     [SerializeField]
-    private int _resourceCQuantity;
+    private int _inputCQuantity;
     [SerializeField]
-    private float _labor = 0.0f;
+    private float _labor;
 
     [SerializeField]
-    private Resource _output;
+    private Item _output;
+    [SerializeField]
+    private int _outputQuantity;
+
+    public string displayName => _output.displayName;
 }

@@ -230,6 +230,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1650473077425771917, guid: 465835b905ea4a148b761d24584e39b6, type: 3}
+      propertyPath: recipe
+      value: 
+      objectReference: {fileID: 11400000, guid: e4945894096d6df48887b957fa4a407e, type: 2}
     - target: {fileID: 4297541864912112089, guid: 465835b905ea4a148b761d24584e39b6, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -297,7 +301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3673463596470173886, guid: bcb5e576133268548976b6ef39480907, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.489291
+      value: -5.22
       objectReference: {fileID: 0}
     - target: {fileID: 3673463596470173886, guid: bcb5e576133268548976b6ef39480907, type: 3}
       propertyPath: m_LocalRotation.w
@@ -351,6 +355,14 @@ PrefabInstance:
       propertyPath: orders.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7685525821118437097, guid: bcb5e576133268548976b6ef39480907, type: 3}
+      propertyPath: recipe
+      value: 
+      objectReference: {fileID: 11400000, guid: e4945894096d6df48887b957fa4a407e, type: 2}
+    - target: {fileID: 7685525821118437097, guid: bcb5e576133268548976b6ef39480907, type: 3}
+      propertyPath: assignee
+      value: 
+      objectReference: {fileID: 1538280461}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcb5e576133268548976b6ef39480907, type: 3}
 --- !u!1 &1214202663

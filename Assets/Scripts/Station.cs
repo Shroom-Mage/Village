@@ -6,20 +6,14 @@ public class Station : MonoBehaviour
 {
     public Worker assignee;
     public List<Recipe> orders;
-    public Recipe recipe;
 
-    private void Start() {
-        Debug.Log(name + ": Start.");
-        orders.Add(recipe);
-        InitiateWorkOrder(recipe);
-    }
-
-    private void OnMouseDown() {
-    }
+    private Inventory _input;
+    private Inventory _output;
 
     //Instruct worker to check station for materials
     public void InitiateWorkOrder(Recipe order) {
-        Debug.Log(name + ": Work Order initiated.");
+        Debug.Log(name + " has initiated a work order for " + order.displayName + ".");
+        orders.Add(order);
         assignee.ReceiveWorkOrder(this, order);
     }
 }
