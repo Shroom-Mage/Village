@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3.5
+  recipe: {fileID: 0}
 --- !u!114 &1362618229784930831
 MonoBehaviour:
   m_ObjectHideFlags: 0

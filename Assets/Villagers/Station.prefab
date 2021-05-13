@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 3673463596470173886}
   - component: {fileID: 8356052721106655811}
   - component: {fileID: 7685525821118437097}
-  - component: {fileID: 1958206589401303018}
-  - component: {fileID: 9210686136796253111}
   m_Layer: 0
   m_Name: Station
   m_TagString: Station
@@ -62,33 +60,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assignee: {fileID: 0}
   orders: []
-  recipe: {fileID: 0}
---- !u!114 &1958206589401303018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5619658324628931021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4ac2b7a825b4224788d610b08003c0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots: []
---- !u!114 &9210686136796253111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5619658324628931021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4ac2b7a825b4224788d610b08003c0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots: []
+  _input: []
+  _table: []
+  _output: []
 --- !u!1 &8784857922001769717
 GameObject:
   m_ObjectHideFlags: 0
