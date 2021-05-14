@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Station : MonoBehaviour
 {
+    public Taskboard taskboard;
+
     public Worker assignee;
-    public List<Recipe> orders;
 
     [SerializeField]
     private List<Item> _inputItems = new List<Item>(0);
@@ -15,15 +16,14 @@ public class Station : MonoBehaviour
     private List<Item> _outputItems = new List<Item>(0);
 
     //Instruct worker to check station for materials
-    public void InitiateWorkOrder(Recipe order) {
-        Debug.Log(name + " has initiated a work order for " + order.displayName + ".");
-        orders.Add(order);
-        assignee.ReceiveWorkOrder(this, order);
+    public void InitiateWorkOrder(Recipe recipe) {
+        taskboard.CreateTask(recipe, this, assignee);
+        Debug.Log(name + " has created a task for " + recipe.displayName + ".");
     }
 
-    public bool BeginWorkOrder(Recipe order) {
+    public bool BeginRecipe(Recipe recipe) {
         //Check if requirements are met
-        foreach (Item requiredItem in order.GetRequirements()) {
+        foreach (Item requiredItem in recipe.GetRequirements()) {
             if (_inputItems.Contains(requiredItem)) {
                 //Move item from input to table
                 _inputItems.Remove(requiredItem);
@@ -31,7 +31,7 @@ public class Station : MonoBehaviour
                 Debug.Log("Moved " + requiredItem.displayName + " to the table.");
             } else {
                 //Move everything back to input
-                Debug.Log("Missing " + requiredItem.displayName + " required for " + order.displayName + ".");
+                Debug.Log("Missing " + requiredItem.displayName + " required for " + recipe.displayName + ".");
                 foreach (Item pendingItem in _tableItems) {
                     _inputItems.Add(pendingItem);
                     Debug.Log("Returned " + requiredItem.displayName + " to the stockpile.");

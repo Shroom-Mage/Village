@@ -5,48 +5,54 @@ using UnityEngine.AI;
 
 public class Worker : MonoBehaviour
 {
-    private Recipe _targetOrder;
-    private Station _targetStation;
-    private float _accumulatedLabor = 0.0f;
     private bool _working = false;
+    private float _accumulatedLabor = 0.0f;
 
     private NavMeshAgent _agent;
+
+    public Taskboard taskboard;
+    public Task currentTask;
 
     private void Awake() {
         _agent = GetComponent<NavMeshAgent>();
     }
 
     private void Update() {
+        //If the worker is working on a task
         if (_working) {
             _accumulatedLabor += Time.deltaTime;
-            float itemCompletion = _accumulatedLabor / _targetOrder.requiredLabor * 100.0f;
-            Debug.Log("Villager is " + itemCompletion + "% finished working on " + _targetOrder.displayName + ".");
-            if (_accumulatedLabor >= _targetOrder.requiredLabor) {
-                _targetStation.CompleteWorkOrder(_targetOrder);
-                _targetOrder = null;
-                _targetStation = null;
+            float itemCompletion = _accumulatedLabor / currentTask.recipe.requiredLabor * 100.0f;
+            Debug.Log("Villager is " + itemCompletion + "% finished working on " + currentTask.recipe.displayName + ".");
+            if (_accumulatedLabor >= currentTask.recipe.requiredLabor) {
+                currentTask.station.CompleteWorkOrder(currentTask.recipe);
+                currentTask.recipe = null;
+                currentTask.station = null;
                 _working = false;
                 _accumulatedLabor = 0.0f;
             }
         }
-        else if (!_working && _targetStation) {
+        //If the worker is on the way to a task
+        else if (!_working && currentTask.station) {
             Vector2 workerPosition = new Vector2(transform.position.x, transform.position.z);
-            Vector2 stationPosition = new Vector2(_targetStation.transform.position.x, _targetStation.transform.position.z);
+            Vector2 stationPosition = new Vector2(currentTask.station.transform.position.x, currentTask.station.transform.position.z);
             if (workerPosition == stationPosition) {
                 ArriveAtStation();
             }
         }
+        //If the worker has no task
+        else if (!_working) {
+            taskboard.AssignTask(this); //To do: Remove this
+        }
     }
 
-    public void ReceiveWorkOrder(Station station, Recipe order) {
-        Debug.Log(name + " received work order for " + order.displayName + ".");
-        _targetOrder = order;
-        _targetStation = station;
-        _agent.SetDestination(station.transform.position);
+    public void ReceiveTask(Task task) {
+        Debug.Log(name + " received work order for " + task.recipe.displayName + ".");
+        currentTask = task;
+        _agent.SetDestination(task.station.transform.position);
     }
 
     private void ArriveAtStation() {
-        Debug.Log(name + " has begun work on " + _targetOrder.displayName + ".");
-        _working = _targetStation.BeginWorkOrder(_targetOrder);
+        Debug.Log(name + " has begun work on " + currentTask.recipe.displayName + ".");
+        _working = currentTask.station.BeginRecipe(currentTask.recipe);
     }
 }
