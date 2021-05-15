@@ -11,6 +11,7 @@ public class Worker : MonoBehaviour
     private NavMeshAgent _agent;
 
     public Taskboard taskboard;
+    public Station assignedStation;
     public Task currentTask;
 
     private void Awake() {
@@ -29,6 +30,7 @@ public class Worker : MonoBehaviour
                 currentTask.station = null;
                 _working = false;
                 _accumulatedLabor = 0.0f;
+                currentTask = new Task { };
             }
         }
         //If the worker is on the way to a task
@@ -38,10 +40,6 @@ public class Worker : MonoBehaviour
             if (workerPosition == stationPosition) {
                 ArriveAtStation();
             }
-        }
-        //If the worker has no task
-        else if (!_working) {
-            taskboard.AssignTask(this); //To do: Remove this
         }
     }
 
@@ -54,5 +52,8 @@ public class Worker : MonoBehaviour
     private void ArriveAtStation() {
         Debug.Log(name + " has begun work on " + currentTask.recipe.displayName + ".");
         _working = currentTask.station.BeginRecipe(currentTask.recipe);
+        if (!_working) {
+            currentTask = new Task { };
+        }
     }
 }

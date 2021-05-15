@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Stockpile : MonoBehaviour
 {
-    public List<Item> slots;
+    public List<Item> inventory;
 }

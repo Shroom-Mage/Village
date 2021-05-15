@@ -6,7 +6,7 @@ public class Station : MonoBehaviour
 {
     public Taskboard taskboard;
 
-    public Worker assignee;
+    public Worker assignedWorker;
 
     [SerializeField]
     private List<Item> _inputItems = new List<Item>(0);
@@ -17,11 +17,11 @@ public class Station : MonoBehaviour
 
     //Instruct worker to check station for materials
     public void InitiateWorkOrder(Recipe recipe) {
-        taskboard.CreateTask(recipe, this, assignee);
+        taskboard.CreateTask(recipe, this, assignedWorker);
         Debug.Log(name + " has created a task for " + recipe.displayName + ".");
     }
 
-    public bool BeginRecipe(Recipe recipe) {
+    public bool BeginRecipe(Recipe recipe) { //To do: Move BeginRecipe to Worker (requires Stockpile)
         //Check if requirements are met
         foreach (Item requiredItem in recipe.GetRequirements()) {
             if (_inputItems.Contains(requiredItem)) {

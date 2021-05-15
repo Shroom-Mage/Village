@@ -9,7 +9,13 @@ public class Taskboard : MonoBehaviour
         public Worker assignee;
     }
 
-    private List<Order> orders = new List<Order>(0);
+    private List<Order> _pendingOrders = new List<Order>(0);
+    [SerializeField]
+    private List<Worker> _workers = new List<Worker>(0);
+
+    private void Update() {
+        AssignTasks();
+    }
 
     public Task CreateTask(Recipe recipe, Station station, Worker assignee = null) {
         //Create a task from the recipe and station
@@ -21,39 +27,67 @@ public class Taskboard : MonoBehaviour
         Order order = new Order();
         order.task = task;
         order.assignee = assignee;
-        orders.Add(order);
-        assignee.currentTask = task;
+        _pendingOrders.Add(order);
+        if (assignee) assignee.currentTask = task;
         return task;
     }
 
-    public Task AssignTask(Worker worker) {
-        bool taskFound = false;
-        Task foundTask = new Task { };
-        foreach (Order order in orders) {
-            if (order.assignee == worker) {
-                foundTask = order.task;
-                break;
+    public void AssignTasks() {
+        List<Order> openOrders = new List<Order>(0);
+        List<Order> issuedOrders = new List<Order>(0);
+
+        //Give each assignee their task, building a list of unassigned tasks
+        foreach (Order order in _pendingOrders) {
+            if (order.assignee) {
+                order.assignee.ReceiveTask(order.task);
+                issuedOrders.Add(order);
             }
-            if (!taskFound && !order.assignee) {
-                taskFound = true;
-                foundTask = order.task;
+            else {
+                openOrders.Add(order);
             }
         }
-        if (foundTask.recipe) {
-            worker.ReceiveTask(foundTask);
+
+        //Assign each open task to an available worker
+        int orderIndex = 0;
+        int workerIndex = 0;
+        while (orderIndex < openOrders.Count && workerIndex < _workers.Count) {
+            Order order = openOrders[orderIndex];
+            Worker worker = _workers[workerIndex];
+            if (worker.assignedStation || worker.currentTask.recipe) {
+                workerIndex++;
+            }
+            else {
+                order.assignee = worker;
+                worker.ReceiveTask(order.task);
+                issuedOrders.Add(order);
+                orderIndex++;
+                workerIndex++;
+            }
         }
-        return foundTask;
+
+        //Remove issued orders from pending orders
+        foreach (Order order in issuedOrders) {
+            _pendingOrders.Remove(order);
+        }
+
     }
 
-    /* To do:
-     * 
-     *  Change the taskboard to search each worker instead
-     *  of having each worker search the taskboard.
-     *  For each order,
-     *  if it has an assignee,
-     *  have that assignee receive the task.
-     *  Build a list of unassigned orders,
-     *  then search the list of workers,
-     *  giving each unassigned task to the next taskless worker.
-     */
+    //public Task AssignTask(Worker worker) {
+    //    bool taskFound = false;
+    //    Task foundTask = new Task { };
+    //    foreach (Order order in _orders) {
+    //        if (order.assignee == worker) {
+    //            foundTask = order.task;
+    //            break;
+    //        }
+    //        if (!taskFound && !order.assignee) {
+    //            taskFound = true;
+    //            foundTask = order.task;
+    //        }
+    //    }
+    //    if (foundTask.recipe) {
+    //        worker.ReceiveTask(foundTask);
+    //    }
+    //    return foundTask;
+    //}
 }
