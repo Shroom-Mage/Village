@@ -11,10 +11,14 @@ public class Taskboard : MonoBehaviour
 
     private List<Order> _pendingOrders = new List<Order>(0);
     [SerializeField]
+    private List<Stockpile> _stockpiles = new List<Stockpile>(0);
+    [SerializeField]
     private List<Worker> _workers = new List<Worker>(0);
 
+
+
     private void Update() {
-        AssignTasks();
+        AssignOrders();
     }
 
     public Task CreateTask(Recipe recipe, Station station, Worker assignee = null) {
@@ -32,35 +36,25 @@ public class Taskboard : MonoBehaviour
         return task;
     }
 
-    public void AssignTasks() {
-        List<Order> openOrders = new List<Order>(0);
+    private void AssignOrders() {
         List<Order> issuedOrders = new List<Order>(0);
-
-        //Give each assignee their task, building a list of unassigned tasks
-        foreach (Order order in _pendingOrders) {
-            if (order.assignee) {
-                order.assignee.ReceiveTask(order.task);
-                issuedOrders.Add(order);
-            }
-            else {
-                openOrders.Add(order);
-            }
-        }
 
         //Assign each open task to an available worker
         int orderIndex = 0;
         int workerIndex = 0;
-        while (orderIndex < openOrders.Count && workerIndex < _workers.Count) {
-            Order order = openOrders[orderIndex];
+        while (orderIndex < _pendingOrders.Count && workerIndex < _workers.Count) {
+            Order order = _pendingOrders[orderIndex];
             Worker worker = _workers[workerIndex];
-            if (worker.assignedStation || worker.currentTask.recipe) {
-                workerIndex++;
-            }
-            else {
+            if ((worker.station == order.task.station) || (!worker.station && !worker.currentTask.recipe)) {
+                //If this is the worker's station or the worker has no station and no task,
+                //assign them to this task
                 order.assignee = worker;
                 worker.ReceiveTask(order.task);
                 issuedOrders.Add(order);
                 orderIndex++;
+                workerIndex++;
+            } else {
+                //Otherwise, skip this worker
                 workerIndex++;
             }
         }
@@ -69,25 +63,5 @@ public class Taskboard : MonoBehaviour
         foreach (Order order in issuedOrders) {
             _pendingOrders.Remove(order);
         }
-
     }
-
-    //public Task AssignTask(Worker worker) {
-    //    bool taskFound = false;
-    //    Task foundTask = new Task { };
-    //    foreach (Order order in _orders) {
-    //        if (order.assignee == worker) {
-    //            foundTask = order.task;
-    //            break;
-    //        }
-    //        if (!taskFound && !order.assignee) {
-    //            taskFound = true;
-    //            foundTask = order.task;
-    //        }
-    //    }
-    //    if (foundTask.recipe) {
-    //        worker.ReceiveTask(foundTask);
-    //    }
-    //    return foundTask;
-    //}
 }

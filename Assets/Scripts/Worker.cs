@@ -10,8 +10,7 @@ public class Worker : MonoBehaviour
 
     private NavMeshAgent _agent;
 
-    public Taskboard taskboard;
-    public Station assignedStation;
+    public Station station;
     public Task currentTask;
 
     private void Awake() {
