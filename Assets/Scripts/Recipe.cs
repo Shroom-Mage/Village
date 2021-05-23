@@ -6,6 +6,8 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     [SerializeField]
+    private List<Item> _requirements;
+    [SerializeField]
     private Item _inputA;
     [SerializeField]
     private int _inputAQuantity;
