@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efa4ceffcd9a3154592dbe28257bbda0, type: 3}
-  m_Name: Box_I
+  m_Name: Stone_I
   m_EditorClassIdentifier: 
-  _displayName: Box
-  prefab: {fileID: 5420387271456308861, guid: 2d014430b1f407f4793f7e2e1978c304, type: 3}
+  _displayName: Stone
+  prefab: {fileID: 7024987034184442179, guid: dd37c4bad2bc8374ebc0b1ea014309f6, type: 3}

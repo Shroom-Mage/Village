@@ -5,6 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 3.5f;
+    public float jumpForce = 5.0f;
+    public float gravityUp = 5.0f;
+    public float gravityDown = 4.0f;
     public Recipe recipe;
 
     private CharacterController _controller;
@@ -25,7 +28,7 @@ public class Player : MonoBehaviour
         switch (other.tag) {
             case "Station":
                 Station station = other.GetComponent<Station>();
-                station.InitiateWorkOrder(recipe);
+                station.InitiateCraftingOrder(recipe);
                 break;
         }
     }

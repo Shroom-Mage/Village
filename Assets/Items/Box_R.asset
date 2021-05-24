@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f61a90a4162b342449077bf25560f102, type: 3}
   m_Name: Box_R
   m_EditorClassIdentifier: 
-  _inputA: {fileID: 11400000, guid: 726ec269386c09d49b402401d99a3c68, type: 2}
-  _inputAQuantity: 4
-  _inputB: {fileID: 0}
+  _requirements:
+  - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
+  - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
+  - {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
+  _inputA: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
+  _inputAQuantity: 0
+  _inputB: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _inputBQuantity: 0
-  _inputC: {fileID: 0}
+  _inputC: {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
   _inputCQuantity: 0
   _labor: 5
-  _output: {fileID: 11400000, guid: 7955c585f1558bc429143115118fbf13, type: 2}
+  _output: {fileID: 11400000, guid: d4c2dbf4e3f608c49a3ad1fc80188b61, type: 2}
   _outputQuantity: 0
