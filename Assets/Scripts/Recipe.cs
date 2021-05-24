@@ -6,6 +6,8 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     [SerializeField]
+    private List<Item> _requirements;
+    [SerializeField]
     private Item _inputA;
     [SerializeField]
     private int _inputAQuantity;
@@ -26,4 +28,17 @@ public class Recipe : ScriptableObject
     private int _outputQuantity;
 
     public string displayName => _output.displayName;
+    public float requiredLabor => _labor;
+
+    public List<Item> GetRequirements() {
+        List<Item> input = new List<Item>();
+        if (_inputA) input.Add(_inputA);
+        if (_inputB) input.Add(_inputB);
+        if (_inputC) input.Add(_inputC);
+        return input;
+    }
+
+    public Item GetResult() {
+        return _output;
+    }
 }

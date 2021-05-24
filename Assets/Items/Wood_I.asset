@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Wood_I
   m_EditorClassIdentifier: 
   _displayName: Wood
+  prefab: {fileID: 3959918608538852916, guid: 774ce385f96055a40968acf80c363927, type: 3}
