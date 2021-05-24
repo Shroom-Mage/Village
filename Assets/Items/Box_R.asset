@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: Box_R
   m_EditorClassIdentifier: 
   _requirements:
-  - {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
-  - {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
-  - {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
-  - {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
-  _inputA: {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
+  - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
+  - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
+  - {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
+  _inputA: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _inputAQuantity: 0
-  _inputB: {fileID: 7436312230939977716, guid: 774ce385f96055a40968acf80c363927, type: 3}
+  _inputB: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _inputBQuantity: 0
-  _inputC: {fileID: 2771871593285239144, guid: dd37c4bad2bc8374ebc0b1ea014309f6, type: 3}
+  _inputC: {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
   _inputCQuantity: 0
   _labor: 5
-  _output: {fileID: -7105533066759685708, guid: 2d014430b1f407f4793f7e2e1978c304, type: 3}
+  _output: {fileID: 11400000, guid: d4c2dbf4e3f608c49a3ad1fc80188b61, type: 2}
   _outputQuantity: 0

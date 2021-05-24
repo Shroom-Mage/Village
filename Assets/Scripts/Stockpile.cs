@@ -2,32 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stockpile : MonoBehaviour {
-
-    [SerializeField]
-    private List<Item> _inventory = new List<Item>(0);
-
-    public void AddItem(Item item) {
-        _inventory.Add(item);
-    }
-
-    public Item RemoveItem(Item item) {
-        if (_inventory.Remove(item)) {
-            return item;
-        } else {
-            return null;
-        }
-    }
-
+public class Stockpile : Inventory
+{
     public Item GetItem(int index) {
-        if (index < 0 || index < _inventory.Count) {
-            return _inventory[index];
+        if (index < 0 || index < _items.Count) {
+            return _items[index];
         }
         return new Item();
     }
 
     public Vector3 FindItemPosition(int index) {
-        if (index < 0 || index < _inventory.Count) {
+        if (index < 0 || index < _items.Count) {
             return new Vector3(-1.0f, -1.0f, -1.0f);
         }
         Vector3 size = GetSize();

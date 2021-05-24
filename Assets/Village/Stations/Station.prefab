@@ -58,11 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec3c042dc229ae4683f46d510170a40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assignee: {fileID: 0}
-  orders: []
-  _input: []
-  _table: []
-  _output: []
+  _items: []
+  taskboard: {fileID: 0}
+  input: {fileID: 0}
+  output: {fileID: 0}
+  _inputItems: []
+  _outputItems: []
 --- !u!1 &8784857922001769717
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3281974eb976efe4d8780a08f48573f6, type: 2}
+  - {fileID: 2100000, guid: d531c885593715644b00be07d648e0c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Taskboard : MonoBehaviour
 {
     private class Order {
-        public Task task;
+        public CraftingTask task;
         public Worker assignee;
     }
 
@@ -21,18 +21,37 @@ public class Taskboard : MonoBehaviour
         AssignOrders();
     }
 
-    public Task CreateTask(Recipe recipe, Station station, Worker assignee = null) {
+    public CraftingTask CreateCraftingTask(Recipe recipe, Station station, Worker assignee = null) {
         //Create a task from the recipe and station
-        Task task = new Task {
+        CraftingTask task = new CraftingTask {
             recipe = recipe,
             station = station
         };
-        //Bind the task to the worker
+
+        //Bind the task to an order
         Order order = new Order();
         order.task = task;
         order.assignee = assignee;
+        if (assignee) assignee.craftingTask = task;
+
+        //Add the order to pending
         _pendingOrders.Add(order);
-        if (assignee) assignee.currentTask = task;
+
+        return task;
+    }
+
+    public HaulingTask CreateHaulingTask(Item item, Inventory from, Inventory to, Worker assignee = null) {
+        //Create a task from the item and inventories
+        HaulingTask task = new HaulingTask {
+            item = item,
+            from = from,
+            to = to
+        };
+
+        //Bind the task to an order
+
+        //Add the order to pending
+
         return task;
     }
 
@@ -45,7 +64,7 @@ public class Taskboard : MonoBehaviour
         while (orderIndex < _pendingOrders.Count && workerIndex < _workers.Count) {
             Order order = _pendingOrders[orderIndex];
             Worker worker = _workers[workerIndex];
-            if ((worker.station == order.task.station) || (!worker.station && !worker.currentTask.recipe)) {
+            if ((worker.station == order.task.station) || (!worker.station && !worker.craftingTask.recipe)) {
                 //If this is the worker's station or the worker has no station and no task,
                 //assign them to this task
                 order.assignee = worker;

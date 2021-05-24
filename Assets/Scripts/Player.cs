@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         switch (other.tag) {
             case "Station":
                 Station station = other.GetComponent<Station>();
-                station.InitiateWorkOrder(recipe);
+                station.InitiateCraftingOrder(recipe);
                 break;
         }
     }
