@@ -13,6 +13,8 @@ public class Taskboard : MonoBehaviour
     [SerializeField]
     private List<Stockpile> _stockpiles = new List<Stockpile>(0);
     [SerializeField]
+    private List<Harvestable> _harvestables = new List<Harvestable>(0);
+    [SerializeField]
     private List<Worker> _workers = new List<Worker>(0);
 
 
@@ -52,6 +54,15 @@ public class Taskboard : MonoBehaviour
 
         //Add the order to pending
 
+        return task;
+    }
+
+    public HarvestingTask CreateHarvestingTask(Harvestable harvestable, Stockpile stockpile) {
+        //Create a task from the harvestable and stockpile
+        HarvestingTask task = new HarvestingTask {
+            harvestable = harvestable,
+            stockpile = stockpile
+        };
         return task;
     }
 

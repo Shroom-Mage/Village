@@ -8,18 +8,6 @@ public class Recipe : ScriptableObject
     [SerializeField]
     private List<Item> _requirements;
     [SerializeField]
-    private Item _inputA;
-    [SerializeField]
-    private int _inputAQuantity;
-    [SerializeField]
-    private Item _inputB;
-    [SerializeField]
-    private int _inputBQuantity;
-    [SerializeField]
-    private Item _inputC;
-    [SerializeField]
-    private int _inputCQuantity;
-    [SerializeField]
     private float _labor;
 
     [SerializeField]
@@ -32,9 +20,9 @@ public class Recipe : ScriptableObject
 
     public List<Item> GetRequirements() {
         List<Item> input = new List<Item>();
-        if (_inputA) input.Add(_inputA);
-        if (_inputB) input.Add(_inputB);
-        if (_inputC) input.Add(_inputC);
+        foreach (Item item in _requirements) {
+            input.Add(item);
+        }
         return input;
     }
 

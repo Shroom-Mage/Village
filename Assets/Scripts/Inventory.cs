@@ -8,11 +8,11 @@ public class Inventory : MonoBehaviour
     protected List<Item> _items = new List<Item>(0);
     private List<Item> _reservedItems = new List<Item>(0);
 
-    public void AddItem(Item item) {
+    public virtual void AddItem(Item item) {
         _items.Add(item);
     }
 
-    public Item RemoveItem(Item item) {
+    public virtual Item RemoveItem(Item item) {
         if (_items.Remove(item)) {
             return item;
         }

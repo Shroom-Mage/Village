@@ -15,12 +15,12 @@ MonoBehaviour:
   _requirements:
   - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   - {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
-  - {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
+  - {fileID: 11400000, guid: 136eb2c44abef0b40802b526b7dffeea, type: 2}
   _inputA: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _inputAQuantity: 0
   _inputB: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _inputBQuantity: 0
-  _inputC: {fileID: 11400000, guid: 7f4fb1b4c196eb54abebcc06a60eff6b, type: 2}
+  _inputC: {fileID: 11400000, guid: 136eb2c44abef0b40802b526b7dffeea, type: 2}
   _inputCQuantity: 0
   _labor: 5
   _output: {fileID: 11400000, guid: d4c2dbf4e3f608c49a3ad1fc80188b61, type: 2}
