@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Harvestable : Inventory
+public class Harvestable : MonoBehaviour
 {
+    [SerializeField]
+    private Item _primaryItem;
+    [SerializeField]
+    private List<Item> _bonusItems;
+
     public float regenTime = 30.0f;
 
     [SerializeField]
@@ -23,21 +28,56 @@ public class Harvestable : Inventory
         _regenTimer3 += Time.deltaTime;
 
         if (_regenTimer1 > regenTime) {
-            _node1.gameObject.SetActive(true);
+            SetNodeActive(1, true);
         }
         if (_regenTimer2 > regenTime) {
-            _node2.gameObject.SetActive(true);
+            SetNodeActive(2, true);
         }
         if (_regenTimer3 > regenTime) {
-            _node3.gameObject.SetActive(true);
+            SetNodeActive(3, true);
         }
     }
 
     public Item Harvest() {
-        if (_node1.gameObject.activeInHierarchy) {
-            _node1.gameObject.SetActive(false);
-            _regenTimer1 = 0;
+        if (GetNodeActive(1)) {
+            SetNodeActive(1, false);
+            return _primaryItem;
         }
         return null;
+    }
+
+    private bool GetNodeActive(int number) {
+        GameObject node;
+        switch (number) {
+            case 1:
+                node = _node1.gameObject;
+                break;
+            case 2:
+                node = _node2.gameObject;
+                break;
+            case 3:
+                node = _node3.gameObject;
+                break;
+            default:
+                return false;
+        }
+        return node.activeInHierarchy;
+    }
+
+    private void SetNodeActive(int number, bool state) {
+        switch (number) {
+            case 1:
+                _node1.gameObject.SetActive(state);
+                _regenTimer1 *= state ? 1 : 0;
+                break;
+            case 2:
+                _node2.gameObject.SetActive(state);
+                _regenTimer2 *= state ? 1 : 0;
+                break;
+            case 3:
+                _node3.gameObject.SetActive(state);
+                _regenTimer3 *= state ? 1 : 0;
+                break;
+        }
     }
 }
