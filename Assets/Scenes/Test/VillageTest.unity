@@ -1399,7 +1399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8548083894366390087, guid: 17897f3ca4b15c0478bdba1caf1dfe74, type: 3}
       propertyPath: m_Name
-      value: Bug Villager
+      value: Onion Villager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17897f3ca4b15c0478bdba1caf1dfe74, type: 3}
@@ -1688,7 +1688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8548083894366390087, guid: 17897f3ca4b15c0478bdba1caf1dfe74, type: 3}
       propertyPath: m_Name
-      value: Plant Villager
+      value: Garlic
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7055727770257515756, guid: 17897f3ca4b15c0478bdba1caf1dfe74, type: 3}

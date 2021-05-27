@@ -13,6 +13,7 @@ public class Worker : MonoBehaviour
     public Station station;
     public CraftingTask craftingTask;
     public HaulingTask haulingTask;
+    public HarvestingTask harvestingTask;
     private Item _heldItem;
     private Transform _heldTransform;
 

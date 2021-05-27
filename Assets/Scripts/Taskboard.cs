@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class Taskboard : MonoBehaviour
 {
+    private enum TaskType {
+        CRAFTING,
+        HAULING,
+        HARVESTING
+    }
+
     private class Order {
-        public CraftingTask task;
+        public TaskType type;
+        public CraftingTask craftingTask;
+        public HaulingTask haulingTask;
+        public HarvestingTask harvestingTask;
         public Worker assignee;
     }
 
@@ -17,12 +26,6 @@ public class Taskboard : MonoBehaviour
     [SerializeField]
     private List<Worker> _workers = new List<Worker>(0);
 
-
-
-    private void Update() {
-        AssignOrders();
-    }
-
     public CraftingTask CreateCraftingTask(Recipe recipe, Station station, Worker assignee = null) {
         //Create a task from the recipe and station
         CraftingTask task = new CraftingTask {
@@ -32,12 +35,13 @@ public class Taskboard : MonoBehaviour
 
         //Bind the task to an order
         Order order = new Order();
-        order.task = task;
+        order.craftingTask = task;
         order.assignee = assignee;
-        if (assignee) assignee.craftingTask = task;
+        //if (assignee) assignee.craftingTask = task;
 
         //Add the order to pending
         _pendingOrders.Add(order);
+        AssignOrders();
 
         return task;
     }
@@ -51,18 +55,33 @@ public class Taskboard : MonoBehaviour
         };
 
         //Bind the task to an order
+        Order order = new Order();
+        order.haulingTask = task;
+        order.assignee = assignee;
+        //if (assignee) assignee.haulingTask = task;
 
         //Add the order to pending
+        //_pendingOrders.Add(order);
+        AssignOrders();
 
         return task;
     }
 
-    public HarvestingTask CreateHarvestingTask(Harvestable harvestable, Stockpile stockpile) {
+    public HarvestingTask CreateHarvestingTask(Harvestable harvestable, Stockpile stockpile, Worker assignee = null) {
         //Create a task from the harvestable and stockpile
         HarvestingTask task = new HarvestingTask {
             harvestable = harvestable,
             stockpile = stockpile
         };
+
+        //Bind the task to an order
+        Order order = new Order();
+        order.harvestingTask = task;
+        order.assignee = assignee;
+
+        //Add the order to pending
+        //_pendingOrders.Add(order);
+        AssignOrders();
         return task;
     }
 
@@ -75,11 +94,11 @@ public class Taskboard : MonoBehaviour
         while (orderIndex < _pendingOrders.Count && workerIndex < _workers.Count) {
             Order order = _pendingOrders[orderIndex];
             Worker worker = _workers[workerIndex];
-            if ((worker.station == order.task.station) || (!worker.station && !worker.craftingTask.recipe)) {
+            if ((worker.station == order.craftingTask.station) || (!worker.station && !worker.craftingTask.recipe)) {
                 //If this is the worker's station or the worker has no station and no task,
                 //assign them to this task
                 order.assignee = worker;
-                worker.ReceiveTask(order.task);
+                worker.ReceiveTask(order.craftingTask);
                 issuedOrders.Add(order);
                 orderIndex++;
                 workerIndex++;
