@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     public float jumpForce = 5.0f;
     public float gravityUp = 5.0f;
     public float gravityDown = 4.0f;
-    public Recipe recipe;
 
     private CharacterController _controller;
     private Controls _inputActions;
@@ -28,7 +27,16 @@ public class Player : MonoBehaviour
         switch (other.tag) {
             case "Station":
                 Station station = other.GetComponent<Station>();
-                station.InitiateCraftingOrder(recipe);
+                switch (station.type) {
+                    case Station.Type.Crafting:
+                        station.InitiateCraftingOrder();
+                        break;
+                    case Station.Type.Hauling:
+                        break;
+                    case Station.Type.Harvesting:
+                        station.InitiateHarvestingOrder();
+                        break;
+                }
                 break;
         }
     }

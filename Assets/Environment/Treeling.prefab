@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 905898538997404223}
   - component: {fileID: 2342285899472380216}
+  - component: {fileID: 7979387618494127445}
   m_Layer: 0
   m_Name: Treeling
-  m_TagString: Untagged
+  m_TagString: Harvestable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beca79d53aaba0b4ba59ac50436900f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _items: []
   _primaryItem: {fileID: 11400000, guid: 297cf6336ef219b42a29a9ad396afd46, type: 2}
   _bonusItems:
   - {fileID: 11400000, guid: 136eb2c44abef0b40802b526b7dffeea, type: 2}
@@ -55,6 +55,20 @@ MonoBehaviour:
   _node1: {fileID: 3646702050280050195}
   _node2: {fileID: 3016343407397362619}
   _node3: {fileID: 2641203673061802953}
+--- !u!136 &7979387618494127445
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5771884390924810344}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.6
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &2534904001530635298
 PrefabInstance:
   m_ObjectHideFlags: 0

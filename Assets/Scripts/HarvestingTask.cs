@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public struct HarvestingTask
-{
-    public Harvestable harvestable;
-    public Stockpile stockpile;
-}
+//public class HarvestingTask
+//{
+//    public Harvestable harvestable;
+//    public Stockpile stockpile;
+//}

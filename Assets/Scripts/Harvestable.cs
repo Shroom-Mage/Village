@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Harvestable : MonoBehaviour
+public class Harvestable : Inventory
 {
     [SerializeField]
     private Item _primaryItem;
@@ -10,6 +10,7 @@ public class Harvestable : MonoBehaviour
     private List<Item> _bonusItems;
 
     public float regenTime = 30.0f;
+    public float requiredLabor = 3.0f;
 
     [SerializeField]
     private Transform _node1;
@@ -41,9 +42,22 @@ public class Harvestable : MonoBehaviour
     public Item Harvest() {
         if (GetNodeActive(1)) {
             SetNodeActive(1, false);
+            AddItem(_primaryItem);
+            return _primaryItem;
+        } else if (GetNodeActive(2)) {
+            SetNodeActive(2, false);
+            AddItem(_primaryItem);
+            return _primaryItem;
+        } else if (GetNodeActive(3)) {
+            SetNodeActive(3, false);
+            AddItem(_primaryItem);
             return _primaryItem;
         }
         return null;
+    }
+
+    public bool IsAvailable() {
+        return GetNodeActive(1) || GetNodeActive(2) || GetNodeActive(3);
     }
 
     private bool GetNodeActive(int number) {
