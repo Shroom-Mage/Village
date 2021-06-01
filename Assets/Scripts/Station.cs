@@ -23,24 +23,33 @@ public class Station : Inventory
     [SerializeField]
     private List<Harvestable> _harvestables;
 
-    public void InitiateCraftingOrder() {
+    public CraftingTask CreateCraftingTask() {
         Debug.Log(name + " has created a task to craft " + _recipe.displayName + ".");
-        taskboard.CreateCraftingTask(this, _recipe);
+        return taskboard.CreateCraftingTask(this, _recipe);
     }
 
-    public void InitiateRetrievalOrder(Item item) {
+    public HaulingTask CreateFetchTask(Item item) {
         Debug.Log(name + " has created a task to retrieve " + item.displayName + ".");
-        taskboard.CreateHaulingTask(this, item, input, this);
+        return taskboard.CreateHaulingTask(this, item, input, this);
     }
 
-    public void InitiateDeliveryOrder(Item item) {
+    public HaulingTask CreateDeliveryTask(Item item) {
         Debug.Log(name + " has created a task to deliver " + item.displayName + ".");
-        taskboard.CreateHaulingTask(this, item, this, output);
+        return taskboard.CreateHaulingTask(this, item, this, output);
     }
 
-    public void InitiateHarvestingOrder() {
+    public HaulingTask CreateTransferTask(Item item, Inventory from, Inventory to) {
+        Debug.Log(name + " has created a task to transfer " + item.displayName + ".");
+        return taskboard.CreateHaulingTask(this, item, from, to);
+    }
+
+    public HarvestingTask CreateHarvestingTask() {
         Debug.Log(name + " has created a task to harvest from " + _harvestables[0] + ".");
-        taskboard.CreateHarvestingTask(this, _harvestables[0], output);
+        return taskboard.CreateHarvestingTask(this, _harvestables[0], output);
+    }
+
+    public void PostTask(Task task) {
+        taskboard.PostTask(task);
     }
 
     //public bool CompleteWorkOrder(Recipe order) {

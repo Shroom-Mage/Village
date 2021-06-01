@@ -29,12 +29,12 @@ public class Player : MonoBehaviour
                 Station station = other.GetComponent<Station>();
                 switch (station.type) {
                     case Station.Type.Crafting:
-                        station.InitiateCraftingOrder();
+                        station.CreateCraftingTask();
                         break;
                     case Station.Type.Hauling:
                         break;
                     case Station.Type.Harvesting:
-                        station.InitiateHarvestingOrder();
+                        station.CreateHarvestingTask();
                         break;
                 }
                 break;

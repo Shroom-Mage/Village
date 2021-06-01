@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class Stockpile : Inventory
 {
-    public Item GetItem(int index) {
-        if (index < 0 || index < _items.Count) {
-            return _items[index];
-        }
-        return new Item();
-    }
-
     public Vector3 FindItemPosition(int index) {
-        if (index < 0 || index < _items.Count) {
+        if (index < 0 || index < count) {
             return new Vector3(-1.0f, -1.0f, -1.0f);
         }
         Vector3 size = GetSize();

@@ -5,94 +5,87 @@ using UnityEngine.AI;
 
 public class Worker : MonoBehaviour
 {
-    private bool _crafting = false;
-    private bool _harvesting = false;
-    private float _accumulatedLabor = 0.0f;
+    private NavMeshAgent _agent;
 
-    private Queue<Task> _tasklist;
+    private float _accumulatedLabor = 0.0f;
     private Item _heldItem;
     private Transform _heldTransform;
 
-    private NavMeshAgent _agent;
+    private State _state = State.Idle;
+
+    private CraftingTask _craftingTask;
+    private HarvestingTask _harvestingTask;
+    private HaulingTask _haulingTask;
 
     public Station station;
-    public CraftingTask craftingTask;
-    public HaulingTask haulingTask;
-    public HarvestingTask harvestingTask;
 
+    public bool isBusy => _state != State.Idle;
 
     private void Awake() {
         _agent = GetComponent<NavMeshAgent>();
     }
 
     private void Update() {
-        //If the worker is crafting an item
-        if (_crafting) {
-            _accumulatedLabor += Time.deltaTime;
-            float itemCompletion = _accumulatedLabor / craftingTask.recipe.requiredLabor * 100.0f;
-            if (_accumulatedLabor >= craftingTask.recipe.requiredLabor) {
-                FinishCrafting();
-                _accumulatedLabor = 0.0f;
-            }
-        }
-        //If the worker is harvesting an item
-        else if (_harvesting) {
-            _accumulatedLabor += Time.deltaTime;
-            float itemCompletion = _accumulatedLabor / harvestingTask.harvestable.requiredLabor * 100.0f;
-            if (_accumulatedLabor >= harvestingTask.harvestable.requiredLabor) {
-                FinishHarvesting();
-                _accumulatedLabor = 0.0f;
-            }
-        }
-        //If the worker needs to get an item
-        else if (haulingTask != null && !_heldItem) {
-            Vector2 workerPosition = new Vector2(transform.position.x, transform.position.z);
-            Vector2 inventoryPosition = new Vector2(haulingTask.from.transform.position.x, haulingTask.from.transform.position.z);
-            if (workerPosition == inventoryPosition) {
-                //Take item from inventory
-                TakeItem(haulingTask.item, haulingTask.from);
-                //Bring item to destination
-                _agent.SetDestination(haulingTask.to.transform.position);
-            }
-        }
-        //If the worker needs to return with an item
-        else if (haulingTask != null && _heldItem) {
-            Vector2 workerPosition = new Vector2(transform.position.x, transform.position.z);
-            Vector2 inventoryPosition = new Vector2(haulingTask.to.transform.position.x, haulingTask.to.transform.position.z);
-            if (workerPosition == inventoryPosition) {
-                //Deposit held item to inventory
-                DepositItem(haulingTask.to);
-                haulingTask = null;
-                //Return to station if needed
-                if (craftingTask != null) {
-                    _agent.SetDestination(craftingTask.station.transform.position);
+        switch (_state) {
+            case State.Crafting:
+                _accumulatedLabor += Time.deltaTime;
+                if (_accumulatedLabor >= _craftingTask.recipe.requiredLabor) {
+                    FinishCrafting();
+                    _accumulatedLabor = 0.0f;
                 }
-            }
-        }
-        //If the worker needs to craft an item
-        else if (craftingTask != null) {
-            Vector2 workerPosition = new Vector2(transform.position.x, transform.position.z);
-            Vector2 stationPosition = new Vector2(craftingTask.station.transform.position.x, craftingTask.station.transform.position.z);
-            if (workerPosition == stationPosition) {
-                BeginCrafting();
-            }
-        }
-        //If the worker needs to harvest an item
-        else if (harvestingTask != null) {
-            Vector2 workerPosition = new Vector2(transform.position.x, transform.position.z);
-            Vector2 stationPosition = new Vector2(harvestingTask.harvestable.transform.position.x, harvestingTask.harvestable.transform.position.z);
-            if (workerPosition == stationPosition) {
-                BeginHarvesting();
-            }
-        }
-        //If there's nothing else to do
-        else {
-            //Go home
-            _agent.SetDestination(new Vector3());
+                break;
+            case State.Harvesting:
+                _accumulatedLabor += Time.deltaTime;
+                if (_accumulatedLabor >= _harvestingTask.harvestable.requiredLabor) {
+                    FinishHarvesting();
+                    _accumulatedLabor = 0.0f;
+                }
+                break;
+            case State.FetchingItem:
+                Vector2 itemPosition = new Vector2(_haulingTask.from.transform.position.x, _haulingTask.from.transform.position.z);
+                if (itemPosition == new Vector2(transform.position.x, transform.position.z)) {
+                    //Take item from inventory
+                    bool wasItemTaken = TakeItem(_haulingTask.item, _haulingTask.from);
+                    if (wasItemTaken) {
+                        //Bring item to destination
+                        _agent.SetDestination(_haulingTask.to.transform.position);
+                        _state = State.DeliveryingItem;
+                    }
+                    else {
+                        //Item wasn't found
+                        _state = State.Idle;
+                    }
+                }
+                break;
+            case State.DeliveryingItem:
+                Vector2 inventoryPosition = new Vector2(_haulingTask.to.transform.position.x, _haulingTask.to.transform.position.z);
+                if (inventoryPosition == new Vector2(transform.position.x, transform.position.z)) {
+                    //Deposit held item to inventory
+                    DepositItem(_haulingTask.to);
+                    _haulingTask = null;
+                    _state = State.Idle;
+                }
+                break;
+            case State.GoingToStation:
+                Vector2 stationPosition = new Vector2(_craftingTask.station.transform.position.x, _craftingTask.station.transform.position.z);
+                if (stationPosition == new Vector2(transform.position.x, transform.position.z)) {
+                    BeginCrafting();
+                }
+                break;
+            case State.GoingToHarvestable:
+                Vector2 harvestablePosition = new Vector2(_harvestingTask.harvestable.transform.position.x, _harvestingTask.harvestable.transform.position.z);
+                if (harvestablePosition == new Vector2(transform.position.x, transform.position.z)) {
+                    BeginHarvesting();
+                }
+                break;
+            case State.Idle:
+                _agent.ResetPath();
+                //_agent.SetDestination(new Vector3());
+                break;
         }
     }
 
-    public void TakeItem(Item item, Inventory inventory = null) {
+    public bool TakeItem(Item item, Inventory inventory = null) {
         //Drop our current item
         if (_heldItem) {
             DropItem();
@@ -106,7 +99,9 @@ public class Worker : MonoBehaviour
             _heldItem = item;
             _heldTransform = Instantiate(item.prefab, transform);
             _heldTransform.localPosition = new Vector3(0.0f, 2.0f, 0.0f);
+            return true;
         }
+        return false;
     }
 
     public void DepositItem(Inventory inventory) {
@@ -128,132 +123,173 @@ public class Worker : MonoBehaviour
         }
     }
 
+    //Receive a generic task
     public void ReceiveTask(Task task) {
         if (task is CraftingTask craftingTask) {
             ReceiveTask(craftingTask);
-        } else if (task is HaulingTask haulingTask) {
-            ReceiveTask(haulingTask);
         } else if (task is HarvestingTask harvestingTask) {
             ReceiveTask(harvestingTask);
+        } else if (task is HaulingTask haulingTask) {
+            ReceiveTask(haulingTask);
         }
     }
 
+    //Receive a crafting task
     public void ReceiveTask(CraftingTask task) {
-        Debug.Log(name + " received crafting order for " + task.recipe.displayName + ".");
-        craftingTask = task;
+        Debug.Log(name + " received crafting task for " + task.recipe.displayName + ".");
+
+        //Repost current task
+        RepostTask();
+
+        //Begin new task
+        _craftingTask = task;
         _agent.SetDestination(task.station.transform.position);
+        _state = State.GoingToStation;
     }
 
-    public void ReceiveTask(HaulingTask task) {
-        Debug.Log(name + " received hauling order for " + task.item.displayName + ".");
-        haulingTask = task;
-        _agent.SetDestination(task.from.transform.position);
-    }
-
+    //Receive a harvesting task
     public void ReceiveTask(HarvestingTask task) {
-        Debug.Log(name + " received harvesting order for " + task.harvestable.name + ".");
-        harvestingTask = task;
+        Debug.Log(name + " received harvesting task for " + task.harvestable.name + ".");
+
+        //Repost current task
+        RepostTask();
+
+        //Begin new task
+        _harvestingTask = task;
         _agent.SetDestination(task.harvestable.transform.position);
+        _state = State.GoingToHarvestable;
+    }
+
+    //Receive a hauling task
+    public void ReceiveTask(HaulingTask task) {
+        Debug.Log(name + " received hauling task for " + task.item.displayName + ".");
+
+        //Repost current task
+        RepostTask();
+
+        //Begin new task
+        _haulingTask = task;
+        _agent.SetDestination(task.from.transform.position);
+        _state = State.FetchingItem;
+    }
+
+    private void RepostTask() {
+        if (_craftingTask != null) {
+            Debug.Log(name + " reposted crafting task for " + _craftingTask.recipe.displayName + ".");
+            _craftingTask.station.PostTask(_craftingTask);
+            _craftingTask = null;
+        }
+        if (_harvestingTask != null) {
+            Debug.Log(name + " reposted harvesting task for " + _harvestingTask.harvestable.name + ".");
+            _harvestingTask.station.PostTask(_harvestingTask);
+            _harvestingTask = null;
+        }
+        if (_haulingTask != null) {
+            Debug.Log(name + " reposted a hauling task for " + _haulingTask.item.displayName + ".");
+            _haulingTask.station.PostTask(_haulingTask);
+            _haulingTask = null;
+        }
+        _state = State.Idle;
     }
 
     private void BeginCrafting() {
         //Stop if worker has no crafting task
-        if (craftingTask == null) {
+        if (_craftingTask == null) {
             Debug.Log(name + " has no crafting task to begin.");
             return;
         }
 
-        Debug.Log(name + " has begun crafting " + craftingTask.recipe.displayName + ".");
+        Debug.Log(name + " has begun crafting " + _craftingTask.recipe.displayName + ".");
+
         //Prepare a list of needed items
-        Station taskStation = craftingTask.station;
+        Station taskStation = _craftingTask.station;
         bool itemsAreStillNeeded = false;
-        List<Item> requirements = craftingTask.recipe.GetRequirements();
+        List<Item> requirements = _craftingTask.recipe.GetRequirements();
         foreach (Item requiredItem in requirements) {
             //Attempt to reserve the item
             if (!taskStation.ReserveItem(requiredItem)) {
-                //Return all reserved items if we don't have all requirements
+                //Mark the item for retrieval
                 itemsAreStillNeeded = true;
-                taskStation.ReturnReservedItems();
-                //Create a hauling task for the item
-                HaulingTask task = new HaulingTask {
-                    item = requiredItem,
-                    from = taskStation.input,
-                    to = taskStation
-                };
-                ReceiveTask(task);
-                break;
+                taskStation.CreateFetchTask(requiredItem);
             }
         }
-        //If nothing else is needed, start working
+        
+        taskStation.ReturnReservedItems();
+
         if (!itemsAreStillNeeded) {
-            _crafting = true;
+            _state = State.Crafting;
+        } else {
+            RepostTask();
         }
     }
 
     private void BeginHarvesting() {
         //Stop if worker has no harvesting task
-        if (harvestingTask == null) {
+        if (_harvestingTask == null) {
             Debug.Log(name + " has no harvesting task to begin.");
             return;
         }
 
-        if (harvestingTask.harvestable.IsAvailable()) {
-            Debug.Log(name + " has begun harvesting from " + harvestingTask.harvestable.name + ".");
-            _harvesting = true;
+        if (_harvestingTask.harvestable.IsAvailable()) {
+            Debug.Log(name + " has begun harvesting from " + _harvestingTask.harvestable.name + ".");
+            _state = State.Harvesting;
         } else {
-            Debug.Log(harvestingTask.harvestable.name + " has no resources available.");
+            Debug.Log(_harvestingTask.harvestable.name + " has no resources available.");
         }
     }
 
-    private void FinishCrafting() { //Should be partially moved to Station
+    private void FinishCrafting() {
         //Stop if worker has no crafting task
-        if (craftingTask == null) {
+        if (_craftingTask == null) {
             Debug.Log(name + " has no crafting task to complete.");
             return;
         }
 
-        //Check requirements
-        List<Item> requirements = craftingTask.recipe.GetRequirements();
+        //Check requirements (Should happen on station)
+        List<Item> requirements = _craftingTask.recipe.GetRequirements();
         foreach (Item item in requirements) { //Temporary and buggy
-            craftingTask.station.RemoveItem(item); //Replace with reservation system
+            _craftingTask.station.RemoveItem(item); //Replace with reservation system
         }
 
-        //Craft the item
-        Item craftedItem = craftingTask.recipe.GetResult();
+        //Craft the item (Should happen on station)
+        Item craftedItem = _craftingTask.recipe.GetResult();
         Debug.Log(name + " has finished crafting " + craftedItem.displayName + ".");
+        _craftingTask.station.AddItem(craftedItem);
 
         //Create hauling task
-        craftingTask.station.AddItem(craftedItem);
-        haulingTask = new HaulingTask {
-            item = craftedItem,
-            from = craftingTask.station,
-            to = craftingTask.station.output
-        };
+        _craftingTask.station.CreateDeliveryTask(craftedItem);
 
-        craftingTask = null;
-        _crafting = false;
+        //End the crafting task
+        _craftingTask = null;
+        _state = State.Idle;
     }
 
     private void FinishHarvesting() {
         //Stop if worker has no harvesting task
-        if (harvestingTask == null) {
+        if (_harvestingTask == null) {
             Debug.Log(name + " has no harvesting task to complete.");
             return;
         }
 
         //Harvest the item
-        Item harvestedItem = harvestingTask.harvestable.Harvest();
+        Item harvestedItem = _harvestingTask.harvestable.Harvest();
         Debug.Log(name + " has finished harvesting " + harvestedItem.displayName + ".");
 
         //Create a hauling task
-        haulingTask = new HaulingTask {
-            item = harvestedItem,
-            from = harvestingTask.harvestable,
-            to = harvestingTask.station.output
-        };
+        _harvestingTask.station.CreateTransferTask(harvestedItem, _harvestingTask.harvestable, _harvestingTask.stockpile);
 
-        //Remove harvesting task
-        harvestingTask = null;
-        _harvesting = false;
+        //End the harvesting task
+        _harvestingTask = null;
+        _state = State.Idle;
+    }
+
+    private enum State {
+        Idle,
+        GoingToStation,
+        GoingToHarvestable,
+        FetchingItem,
+        DeliveryingItem,
+        Crafting,
+        Harvesting
     }
 }
