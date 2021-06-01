@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Worker : MonoBehaviour
 {
     private NavMeshAgent _agent;
+    private Animator _animator;
 
     private float _accumulatedLabor = 0.0f;
     private Item _heldItem;
@@ -23,9 +24,13 @@ public class Worker : MonoBehaviour
 
     private void Awake() {
         _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update() {
+        _animator.SetFloat("Speed", _agent.velocity.magnitude / _agent.speed);
+        _animator.SetBool("IsHolding", _heldItem != null);
+
         switch (_state) {
             case State.Crafting:
                 _accumulatedLabor += Time.deltaTime;
